@@ -1,6 +1,7 @@
 #=======================================================#
 # Carregando gemas e arquivos necessários
 require("mysql2")
+require("json")
 
 load("./CPU/Skeleton.rb")
 load("./CPU/Head/Brain.rb")
@@ -23,10 +24,10 @@ skeleton_teste.attach(quadrado)
 #=======================================================#
 # Iniciando interacao de teste
 
-ciclo = true
-while(ciclo)
+$ciclo = true
+while($ciclo)
 			
-	print "[*] Digite o comando: "
+	print "\n[*] Digite o comando: "
 	comando = gets.chop!
 	skeleton_teste.command(comando)
 

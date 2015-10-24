@@ -8,7 +8,8 @@ class ArmSoma < ArmTemplate
   #======================================================================#
   def initialize(nome)
     super(nome)
-    @parametros = 2
+    @parametros = 0
+    @state = 1 # Status de parametrização (-1: menor que, 0: igual a, +1: maior que)
     @contrato = nil
     @retorno = nil
   end
@@ -23,6 +24,7 @@ class ArmSoma < ArmTemplate
       @contrato[:param] = @parametros # Quantidade de parametros
       @contrato[:descricao] = nome # Nome
       @contrato[:comando] = "soma".downcase # Identiicador
+      @contrato[:state] = @state # Status de parametrização (-1: menor que, 0: igual a, +1: maior que)
       
        # Retorna o identificador do contrato
        return(@contrato)
@@ -33,8 +35,14 @@ class ArmSoma < ArmTemplate
     def make(*parameters)
        # Ação exercida pela funcionalidade (método de gatilho)
        parametro = parameters[0]
-      if(parametro.length == @parametros)
-        @resposta = parametro[0].to_i + parametro[1].to_i
+       
+      if(parametro.length > @parametros)
+        
+        parametro.map! do |elemento|
+             elemento.to_i
+        end
+        
+        @resposta = parametro.inject(:+)
         
       else
         puts "Quantidade de parâmetros inválida."

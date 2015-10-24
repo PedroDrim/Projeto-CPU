@@ -43,60 +43,144 @@ class Skeleton < SkeletonTemplate
 
   #======================================================================#
   # Envia uma ação para o cerebro "brain" executar
-  def command(action)
+  def command(actions)
     
-    action = action.downcase
-    expressao = /(\w+)\s+(.+)/
+    # criando um "buffer" para armazenar o resultado dos comandos
+    memory_buffer = Hash.new
     
-    expressao = expressao.match(action)  
-
-    if(expressao.nil?)
+    actions.downcase!
+    
+    export = /\-export/.match(actions)
+    export = !export.nil? 
+    
+    actions = actions.split("&")
+    
+    id = 1
+    actions.each do |action|
       
-      puts "[Sys] Acao '#{action}' desconhecida." 
-    else
-    
-        # buscando comandos conhecidos
-        if(expressao[1].downcase == "aprender")
-          
-          # aprender nova funcionalidade
-
-        elsif(expressao[1].downcase == "relatorio")
-
-          # exibe o relatorio das funcionalidades acopladas no sistema
-          state()
-
-        else
-          
-          # buscar no banco a existencia da funcionalidade
-            sql = "select * from contrato where comando = '#{expressao[1].downcase}'"
-            
-            funcionalidade = @connection.query(sql)
-            
-            unless(funcionalidade.to_a.empty?)
-              parametros = expressao[2].split(%r{\s+})
-            
-              funcionalidade.each do |row|
-                if( (parametros.length) == row['parametros'].to_i)
-    
-                  trigger = @add_functions[ row['comando'].to_sym ]
-                  trigger.make(parametros)
-                  
-                  puts "[Sys Call] #{trigger.get}"   
-                  
-                else
+      padrao = /(\w+)\s+(.+)/
+      expressao = padrao.match(action)  
+      
+      if(expressao.nil?)
+        
+        puts "[Sys] Acao '#{action}' desconhecida." 
+        
+        memory_buffer[id.to_s.to_sym] = nil
+        id += 1
+      else
+      
+          # buscando comandos conhecidos do sistema ou banco
+          if(expressao[1].downcase == "system")
+             
+                # iniciando comandos de sistema
+                system_commands(expressao[2])
                 
-                  puts "[Sys] Quantidade de parametros incorreta."  
+                memory_buffer[id.to_s.to_sym] = nil
+                id += 1
+                
+          else
+            
+            # buscar no banco a existencia da funcionalidade
+              sql = "select * from contrato where comando = '#{expressao[1].downcase}'"
+              
+              funcionalidade = @connection.query(sql)
+              
+              unless(funcionalidade.to_a.empty?)
+                parametros = expressao[2].split(%r{\s+})
+              
+                funcionalidade.each do |row|
+                  
+                  state = row['state'].to_i
+                  #============================#
+                  case(state)
+                    
+                    #============================#
+                    # menor que
+                    when -1 
+                        if( (parametros.length) < row['parametros'].to_i)
+      
+                        trigger = @add_functions[ row['comando'].to_sym ]
+                        trigger.make(parametros)
+                    
+                        memory_buffer[id.to_s.to_sym] = trigger.get 
+                    
+                        else
+                  
+                        puts "[Sys] Quantidade de parametros em '#{row['comando']}' incorreta." 
+                        memory_buffer[id.to_s.to_sym] = nil
+                        end
+                     #============================#
+                     
+                     #============================#
+                     # igual a
+                     when 0 
+                        if( (parametros.length) == row['parametros'].to_i)
+      
+                        trigger = @add_functions[ row['comando'].to_sym ]
+                        trigger.make(parametros)
+                    
+                        memory_buffer[id.to_s.to_sym] = trigger.get
+
+                        else
+                  
+                        puts "[Sys] Quantidade de parametros em '#{row['comando']}' incorreta."  
+                        memory_buffer[id.to_s.to_sym] = nil
+                        end
+                     #============================#
+                     
+                     #============================#   
+                     # maior que
+                     when 1 
+                        if( (parametros.length) > row['parametros'].to_i)
+      
+                        trigger = @add_functions[ row['comando'].to_sym ]
+                        trigger.make(parametros)
+                    
+                        memory_buffer[id.to_s.to_sym] = trigger.get
+
+                        else
+                  
+                        puts "[Sys] Quantidade de parametros em '#{row['comando']}' incorreta."  
+                        memory_buffer[id.to_s.to_sym] = nil
+                        end
+                     #============================#
+                     
+                     #============================#   
+                     # erro
+                     else
+                        "[Sys] Quantidade de parametros em '#{row['comando']}' não reconhecida."
+                        memory_buffer[id.to_s.to_sym] = nil
+                     #============================#
+                     
+                  end
+                  #============================#
+                  
+                  id += 1
                 end
               
+              else
+                  puts "[Sys] Acao '#{action}' desconhecida." 
+                  memory_buffer[id.to_s.to_sym] = nil
+                  id += 1
               end
-            
-            else
-                puts "[Sys] Acao '#{action}' desconhecida." 
-            end
-           
-        end
+             
+          end
+      end
+    
     end
-
+ 
+    # imprimindo resultados
+    memory_buffer.each do |key,value|
+      
+      value = "nil" if(value.nil?)
+      puts "[Sys Call #{key}] #{value}"    
+    end
+    
+    # exportando dado
+    if(export)
+      export(memory_buffer)
+    end
+    
   end
   #======================================================================#
   
@@ -115,7 +199,8 @@ class Skeleton < SkeletonTemplate
       begin
       
         # Adiciona funcionalidade
-        sql = "insert into contrato values ('#{contract[:comando]}',#{contract[:param]},'#{contract[:descricao]}')"
+        sql = "insert into contrato values ('#{contract[:comando]}',
+          #{contract[:param]},#{contract[:state]},'#{contract[:descricao]}')"
      
         @connection.query(sql)
         @add_functions[contract[:comando].to_sym] = objeto
@@ -125,6 +210,8 @@ class Skeleton < SkeletonTemplate
         
       rescue
         puts "Esta funcionalidade já está acoplada."
+        @add_functions[contract[:comando].to_sym] = objeto
+        save(@add_functions,"data_memory//module_Hash.mem") 
       end
       
     elsif(objeto.is_a? BrainTemplate) # Objeto do tipo "TemplateBrain"
@@ -238,7 +325,20 @@ class Skeleton < SkeletonTemplate
           puts "Funcionalidade:"
           puts "Comando: #{row['comando']}"
           puts "Descricao: #{row['descricao']}"
-          puts "Quantidade de parametros: #{row['parametros']}"
+          
+          state = row['state']
+          
+          puts case(state)
+            when -1 
+            "Quantidade de parametros: menor que #{row['parametros']}."            
+            when 0 
+            "Quantidade de parametros: igual a #{row['parametros']}."
+            when 1 
+            "Quantidade de parametros: maior que #{row['parametros']}."
+            else
+            "Quantidade de parametros não reconhecida."
+          end
+           
           puts ""
         end
       
@@ -277,5 +377,49 @@ class Skeleton < SkeletonTemplate
   end
   #======================================================================#
    
+  #======================================================================#
+  private
+  def export(buffer)
+    
+    nome = Time.now
+    nome = nome.strftime("export_%Y%m%d_%H%M%S.json")
+    File.open("data_output/#{nome}","w") do |f|
+      f.write(buffer.to_json)
+    end
+    
+    puts "[Sys] Resultados exportados."
+
+  end
+  #======================================================================#
+  
+  #======================================================================#
+  private
+  def system_commands(expressao)
+  
+    case(expressao)
+    when "aprender"
+    # aprender novas funcionalidades
+    puts "[Sys] Funcionalidade não implementada."
+                  
+    when "relatorio"
+    # exibe o relatorio das funcionalidades acopladas no sistema
+    state()
+                  
+    when "limpar"
+    # limpa a memória, removendo arquivos gerados
+    puts "[Sys] Funcionalidade não implementada."
+    
+    when "sair"
+    # encerra o programa
+    puts "[Sys] Encerrando programa."
+    $ciclo = false
+                      
+    else
+    # outra funcionalidade
+    puts "[Sys] Funcionalidade '#{expressao}' não reconhecida."
+                  
+    end
+  end
+  #======================================================================#
 end
 #======================================================================#

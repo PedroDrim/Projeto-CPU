@@ -8,7 +8,8 @@ class ArmQuadrado < ArmTemplate
   #======================================================================#
   def initialize(nome)
     super(nome)
-    @parametros = 1
+    @parametros = 0
+    @state = 1 # Status de parametrização (-1: menor que, 0: igual a, +1: maior que)
     @contrato = nil
     @retorno = nil
   end
@@ -23,6 +24,7 @@ class ArmQuadrado < ArmTemplate
       @contrato[:param] = @parametros # Quantidade de parametros
       @contrato[:descricao] = nome # Nome
       @contrato[:comando] = "quadrado".downcase # Identiicador
+      @contrato[:state] = @state # Status de parametrização (-1: menor que, 0: igual a, +1: maior que)
       
        # Retorna o identificador do contrato
        return(@contrato)
@@ -33,12 +35,17 @@ class ArmQuadrado < ArmTemplate
     def make(*parameters)
        # Ação exercida pela funcionalidade (método de gatilho)
        parametro = parameters[0]
-      if(parametro.length == @parametros)
-        @resposta = (parametro[0].to_i)**2
+      if(parametro.length > @parametros)
+        
+        @resposta = parametro.collect do |elemento|
+          (elemento.to_i)**2
+        end
+        
+        @resposta = @resposta[0] if(@resposta.length == 1)
         
       else
         puts "Quantidade de parâmetros inválida."
-        @resposta = "Erro"
+        @resposta = nil
       end 
       
     end
