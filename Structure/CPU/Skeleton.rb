@@ -1,4 +1,4 @@
-load("Template/SkeletonTemplate.rb")
+load("./Template/SkeletonTemplate.rb")
 #======================================================================#
 class Skeleton < SkeletonTemplate
 
@@ -53,19 +53,21 @@ class Skeleton < SkeletonTemplate
     export = /\-export/.match(actions)
     export = !export.nil? 
     
-    actions = actions.split("&")
+    actions = actions.split("|")
     
     id = 1
+    #============================#
     actions.each do |action|
       
       padrao = /(\w+)\s+(.+)/
       expressao = padrao.match(action)  
       
+      #============================#
       if(expressao.nil?)
         
         puts "[Sys] Acao '#{action}' desconhecida." 
         
-        memory_buffer[id.to_s.to_sym] = nil
+        memory_buffer[id.to_s.to_sym] = jhash("SystemException",nil)
         id += 1
       else
       
@@ -75,7 +77,7 @@ class Skeleton < SkeletonTemplate
                 # iniciando comandos de sistema
                 system_commands(expressao[2])
                 
-                memory_buffer[id.to_s.to_sym] = nil
+                memory_buffer[id.to_s.to_sym] = jhash("Systemcommand",nil)
                 id += 1
                 
           else
@@ -102,12 +104,12 @@ class Skeleton < SkeletonTemplate
                         trigger = @add_functions[ row['comando'].to_sym ]
                         trigger.make(parametros)
                     
-                        memory_buffer[id.to_s.to_sym] = trigger.get 
+                        memory_buffer[id.to_s.to_sym] = jhash(row['comando'],trigger.get)
                     
                         else
                   
                         puts "[Sys] Quantidade de parametros em '#{row['comando']}' incorreta." 
-                        memory_buffer[id.to_s.to_sym] = nil
+                        memory_buffer[id.to_s.to_sym] = jhash("SystemException",nil)
                         end
                      #============================#
                      
@@ -119,12 +121,12 @@ class Skeleton < SkeletonTemplate
                         trigger = @add_functions[ row['comando'].to_sym ]
                         trigger.make(parametros)
                     
-                        memory_buffer[id.to_s.to_sym] = trigger.get
+                        memory_buffer[id.to_s.to_sym] = jhash(row['comando'],trigger.get)
 
                         else
                   
                         puts "[Sys] Quantidade de parametros em '#{row['comando']}' incorreta."  
-                        memory_buffer[id.to_s.to_sym] = nil
+                        memory_buffer[id.to_s.to_sym] = jhash("SystemException",nil)
                         end
                      #============================#
                      
@@ -136,12 +138,12 @@ class Skeleton < SkeletonTemplate
                         trigger = @add_functions[ row['comando'].to_sym ]
                         trigger.make(parametros)
                     
-                        memory_buffer[id.to_s.to_sym] = trigger.get
+                        memory_buffer[id.to_s.to_sym] = jhash(row['comando'],trigger.get)
 
                         else
                   
                         puts "[Sys] Quantidade de parametros em '#{row['comando']}' incorreta."  
-                        memory_buffer[id.to_s.to_sym] = nil
+                        memory_buffer[id.to_s.to_sym] = jhash("SystemException",nil)
                         end
                      #============================#
                      
@@ -149,7 +151,7 @@ class Skeleton < SkeletonTemplate
                      # erro
                      else
                         "[Sys] Quantidade de parametros em '#{row['comando']}' não reconhecida."
-                        memory_buffer[id.to_s.to_sym] = nil
+                        memory_buffer[id.to_s.to_sym] = jhash("SystemException",nil)
                      #============================#
                      
                   end
@@ -160,26 +162,25 @@ class Skeleton < SkeletonTemplate
               
               else
                   puts "[Sys] Acao '#{action}' desconhecida." 
-                  memory_buffer[id.to_s.to_sym] = nil
+                  memory_buffer[id.to_s.to_sym] = jhash("SystemException",nil)
                   id += 1
               end
              
           end
       end
-    
+      #============================#
     end
+    #============================#
  
     # imprimindo resultados
     memory_buffer.each do |key,value|
       
-      value = "nil" if(value.nil?)
-      puts "[Sys Call #{key}] #{value}"    
+      value[:resposta] = "nil" if(value[:resposta].nil?)
+      puts "[Sys Call #{key}] #{value[:resposta]}"    
     end
     
     # exportando dado
-    if(export)
-      export(memory_buffer)
-    end
+    export(memory_buffer) if(export)
     
   end
   #======================================================================#
@@ -421,5 +422,18 @@ class Skeleton < SkeletonTemplate
     end
   end
   #======================================================================#
+  
+  #======================================================================#
+  private
+  def jhash(comando,valor)
+    
+     object_class = Hash.new
+     object_class[:comando] = comando
+     object_class[:resposta] = valor
+     
+     return(object_class)
+  end
+  #======================================================================#
+    
 end
 #======================================================================#

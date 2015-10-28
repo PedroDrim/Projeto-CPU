@@ -1,9 +1,9 @@
 # Template para o objeto responsavel por atribuir as funcionalidades
 # ao "Brain"
 
-load("Template/ArmTemplate.rb")
+load("./Template/ArmTemplate.rb")
 #======================================================================#
-class ArmQuadrado < ArmTemplate
+class ArmSoma < ArmTemplate
     
   #======================================================================#
   def initialize(nome)
@@ -23,7 +23,7 @@ class ArmQuadrado < ArmTemplate
       @contrato = Hash.new
       @contrato[:param] = @parametros # Quantidade de parametros
       @contrato[:descricao] = nome # Nome
-      @contrato[:comando] = "quadrado".downcase # Identiicador
+      @contrato[:comando] = "soma".downcase # Identiicador
       @contrato[:state] = @state # Status de parametrização (-1: menor que, 0: igual a, +1: maior que)
       
        # Retorna o identificador do contrato
@@ -35,16 +35,17 @@ class ArmQuadrado < ArmTemplate
     def make(*parameters)
        # Ação exercida pela funcionalidade (método de gatilho)
        parametro = parameters[0]
+       
       if(parametro.length > @parametros)
         
-        @resposta = parametro.collect do |elemento|
-          (elemento.to_i)**2
+        parametro.map! do |elemento|
+             elemento.to_i
         end
         
-        @resposta = @resposta[0] if(@resposta.length == 1)
+        @resposta = parametro.inject(:+)
         
       else
-        puts "Quantidade de parâmetros inválida."
+        puts "[Soma] Quantidade de parâmetros inválida."
         @resposta = nil
       end 
       

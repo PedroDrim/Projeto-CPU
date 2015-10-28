@@ -1,11 +1,13 @@
 #=======================================================#
 # Carregando gemas e arquivos necessários
+require("sqlite3")
 require("mysql2")
 require("json")
 
 load("./CPU/Skeleton.rb")
 load("./CPU/Head/Brain.rb")
 load("./CPU/Head/Neuronio.rb")
+load("./CPU/db/crudDB.rb")
 load("./Module/ArmSoma.rb")
 load("./Module/ArmQuadrado.rb")
 #=======================================================#
@@ -13,8 +15,8 @@ load("./Module/ArmQuadrado.rb")
 #=======================================================#
 # Carregando objetos primarios
 brain = Brain.new("TecnoBrain","TCB")
-soma = ArmSoma.new("Somatório de 2 inteiros")
-quadrado = ArmQuadrado.new("Obtem o quadrado de um numero")
+soma = ArmSoma.new("Somatório de inteiros")
+quadrado = ArmQuadrado.new("Obtem o quadrado de um conjunto de numeros")
 
 skeleton_teste = Skeleton.new(brain)
 skeleton_teste.attach(soma)
