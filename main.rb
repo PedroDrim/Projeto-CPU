@@ -1,3 +1,5 @@
+#!/usr/bin/ruby
+
 #=======================================================#
 # Carregando gemas e arquivos necessários
 require("sqlite3")
