@@ -2,16 +2,26 @@
 
 #=======================================================#
 # Carregando gemas e arquivos necessários
-require("sqlite3")
-require("mysql2")
-require("json")
+#require("sqlite3")
+#require("json")
 
-load("./CPU/Skeleton.rb")
-load("./CPU/Head/Brain.rb")
-load("./CPU/Head/Neuronio.rb")
-load("./CPU/db/crudDB.rb")
-load("./Module/ArmSoma.rb")
-load("./Module/ArmQuadrado.rb")
+# Iniciando todos os arquivos essenciais para o sistema com a extensao .rb
+argv_base = ARGV
+argv_base.delete("-r")
+
+argv_template = argv_base.select {|file| file[/Template/]}
+argv_base -= argv_template
+
+argv_essentials = argv_base.select {|file| file[/Essentials/]}
+argv_base -= argv_essentials
+
+argv_main = argv_base.select {|file| file[/main/]}
+argv_base -= argv_main
+
+argv_template.each { |file| load file}
+argv_essentials.each { |file| load file}
+argv_base.each { |file| load file}
+
 #=======================================================#
 
 #=======================================================#
@@ -28,7 +38,7 @@ skeleton_teste.attach(quadrado)
 #=======================================================#
 # Iniciando interacao de teste
 
-$ciclo = true
+$ciclo = false
 while($ciclo)
 			
 	print "\n[*] Digite o comando: "

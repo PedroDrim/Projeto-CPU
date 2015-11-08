@@ -1,4 +1,3 @@
-load("./Template/SkeletonTemplate.rb")
 #======================================================================#
 class Skeleton < SkeletonTemplate
 
@@ -6,11 +5,7 @@ class Skeleton < SkeletonTemplate
   # Inicializando objeto
   def initialize(brain = nil)
      
-    @connection = Mysql2::Client.new(
-          :host => "127.0.0.1",
-          :username =>"root",
-          :password => "toor",
-          :database =>"MemoryCPU")
+    @connection = SqliteDAO.new
     
     # Verificando se o sistema já foi iniciado anteriormente
     if(File.exist?("data_memory//module_Hash.mem"))
@@ -200,18 +195,18 @@ class Skeleton < SkeletonTemplate
       begin
       
         # Adiciona funcionalidade
-        sql = "insert into contrato values ('#{contract[:comando]}',
-          #{contract[:param]},#{contract[:state]},'#{contract[:descricao]}')"
+        sql = "insert into contrato values ('#{contract.comando}',
+          #{contract.parametros},#{contract.state},'#{contract.descricao}')"
      
         @connection.query(sql)
-        @add_functions[contract[:comando].to_sym] = objeto
+        @add_functions[(contract.comando).to_sym] = objeto
         save(@add_functions,"data_memory//module_Hash.mem") 
         
         puts "Funcionalidade '#{objeto.nome}' acoplada."
         
       rescue
         puts "Esta funcionalidade já está acoplada."
-        @add_functions[contract[:comando].to_sym] = objeto
+        @add_functions[(contract.comando).to_sym] = objeto
         save(@add_functions,"data_memory//module_Hash.mem") 
       end
       
@@ -252,14 +247,14 @@ class Skeleton < SkeletonTemplate
       # Conectando com o banco
       begin
         
-        sql = "select * from contrato where comando = '#{contract[:comando]}'"
+        sql = "select * from contrato where comando = '#{contract.comando}'"
         
         unless(@connection.query(sql).to_a.empty?)
         
           # Remove funcionalidade      
-          sql = "delete from contrato where comando= '#{contract[:comando]}'"
+          sql = "delete from contrato where comando= '#{contract.comando}'"
           @connection.query(sql) 
-          @add_functions.delete(contract[:comando].to_sym)
+          @add_functions.delete((contract.comando).to_sym)
           save(@add_functions,"data_memory//module_Hash.mem") 
             
           puts "[Sys] Funcionalidade '#{objeto.nome}' removida."  

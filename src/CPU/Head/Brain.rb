@@ -1,5 +1,3 @@
-load("Template/BrainTemplate.rb")
-load("CPU/Head/Neuronio.rb")
 #======================================================================#
 class Brain < BrainTemplate
   

@@ -14,7 +14,7 @@ class Contrato
     raise 'A quantidade de parametros possui letras.' unless parametros.is_a? Numeric    
     @parametros = parametros
     raise 'A tipo de parametros possui letras' unless parametros.is_a? Numeric    
-    @state = state
+    @state = state # Status de parametrização (-1: menor que, 0: igual a, +1: maior que)
     
     @descricao = descricao  
   end
