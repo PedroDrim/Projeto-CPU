@@ -3,8 +3,8 @@ class SqliteDAO
 
     #======================================================================#
     def open()
-
-        @db = SQLite3::Database.open "./CPU/data/db/MemoryCPU.db"
+	
+        @db = SQLite3::Database.open "./src/CPU/data/db/MemoryCPU.db"
     end
     #======================================================================#
     
@@ -30,29 +30,68 @@ class SqliteDAO
     #======================================================================#
     def save(contrato)
 
-       sql = "INSERT INTO contrato VALUES('#{contrato.comando}',#{contrato.parametros},'#{contrato.descricao}',#{contrato.state})"
+       sql = "SELECT EXISTS(SELECT * FROM contrato WHERE comando = '#{contrato.comando}')"
        begin
-          @db.execute(sql) 
+       
+            # buscando no banco          
+        	resp = @db.execute(sql)
+            resp = resp[0]
+        
+        	if(resp[0] == 1)
+        	  puts "[Sys] O contrato #{contrato.comando} já foi inserido."        
+
+        	else
+                sql = "INSERT INTO contrato VALUES('#{contrato.comando}',#{contrato.parametros},'#{contrato.descricao}',#{contrato.state})"
+                @db.execute(sql) 
+        	    puts "[Sys] O contrato da funcionalidade #{contrato.comando} foi inserido."
+        	end
+       
        rescue
-          puts "[Sys] Não foi possivel salvar o contrato."
+       
+          puts "[Sys] Não foi possivel salvar o contrato."       
        end
 
     end
     #======================================================================#
 
     #======================================================================#
-    def delete(comando)
+    def delete(contrato)
 
-       sql = "SELECT * FROM contrato WHERE comando = '#{comando}'"
+       sql = "SELECT EXISTS(SELECT * FROM contrato WHERE comando = '#{contrato.comando}')"
        begin
-	# buscando no banco          
-	resp = @db.execute(sql)
-          
-        # removendo do banco
-        sql = "DELETE FROM contrato WHERE comando = '#{comando}'"
-        resp = @db.execute(sql)
+        	# buscando no banco          
+        	resp = @db.execute(sql)
+            resp = resp[0]
+        
+        	if(resp[0] == 1)
+                  # removendo do banco
+                  sql = "DELETE FROM contrato WHERE comando = '#{contrato.comando}'"
+                  resp = @db.execute(sql)
+        
+        	  puts "[Sys] O contrato da funcionalidade #{contrato.comando} foi removido."
+        	else
+            
+        	  puts "[Sys] Não existe o contrato #{contrato.comando}."
+        	end
+
        rescue
-          puts "[Sys] Não foi possivel remover o contrato."
+          puts "[Sys] Não foi possivel remover o contrato #{contrato.comando}."
+       end
+
+    end
+    #======================================================================#
+
+    #======================================================================#
+    def delete_all()
+
+       sql = "DELETE FROM contrato"
+       begin
+        	# buscando no banco          
+        	resp = @db.execute(sql)
+        	puts "[Sys] Todos os contratos foram removidos."
+       
+       rescue
+          puts "[Sys] Não foi possivel limpar os contratos."
        end
 
     end

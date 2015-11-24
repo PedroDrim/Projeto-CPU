@@ -2,8 +2,8 @@
 
 #=======================================================#
 # Carregando gemas e arquivos necessários
-#require("sqlite3")
-#require("json")
+require("sqlite3")
+require("json")
 
 # Iniciando todos os arquivos essenciais para o sistema com a extensao .rb
 argv_base = ARGV
@@ -28,7 +28,7 @@ argv_base.each { |file| load file}
 # Carregando objetos primarios
 brain = Brain.new("TecnoBrain","TCB")
 soma = ArmSoma.new("Somatório de inteiros")
-quadrado = ArmQuadrado.new("Obtem o quadrado de um conjunto de numeros")
+quadrado = ArmQuadrado.new("Quadrado de inteiros")
 
 skeleton_teste = Skeleton.new(brain)
 skeleton_teste.attach(soma)
@@ -38,7 +38,7 @@ skeleton_teste.attach(quadrado)
 #=======================================================#
 # Iniciando interacao de teste
 
-$ciclo = false
+$ciclo = true
 while($ciclo)
 			
 	print "\n[*] Digite o comando: "
@@ -46,9 +46,9 @@ while($ciclo)
 	skeleton_teste.command(comando)
 
 end
+
+skeleton_teste.close
 #=======================================================#
-#skeleton_teste.detach(soma)
-#skeleton_teste.detach_all
 
 #teste = Neuronio.new(pesos = [1,1])
 

@@ -6,16 +6,8 @@ class Skeleton < SkeletonTemplate
   def initialize(brain = nil)
      
     @connection = SqliteDAO.new
-    
-    # Verificando se o sistema já foi iniciado anteriormente
-    if(File.exist?("data_memory//module_Hash.mem"))
-
-      @add_functions = load("data_memory//module_Hash.mem")      
-    else
-
-      @add_functions = Hash.new
-      save(@add_functions,"data_memory//module_Hash.mem") 
-    end
+    @connection.open
+    @connection.createDB
 
     # Verificando se o objeto não é nulo
     unless(brain.nil?)
@@ -25,7 +17,11 @@ class Skeleton < SkeletonTemplate
         @brain = brain
             
         puts "[Sys] Cerebro '#{brain.nome}' acoplado."
+        
+        nome = "./src/CPU/data/serialization/#{brain.nome}.mem"
+        save(brain,nome)
       else
+      
         puts "[Sys] Objeto nao reconhecido."
         puts "[Sys] Criando um esqueleto vazio."
       end
@@ -36,6 +32,12 @@ class Skeleton < SkeletonTemplate
   end
   #======================================================================#
 
+  #======================================================================#
+  def close
+      @connection.close
+  end
+  #======================================================================#
+  
   #======================================================================#
   # Envia uma ação para o cerebro "brain" executar
   def command(actions)
@@ -77,10 +79,8 @@ class Skeleton < SkeletonTemplate
                 
           else
             
-            # buscar no banco a existencia da funcionalidade
-              sql = "select * from contrato where comando = '#{expressao[1].downcase}'"
-              
-              funcionalidade = @connection.query(sql)
+              # buscar no banco a existencia da funcionalidade
+              funcionalidade = @connection.find(comando)
               
               unless(funcionalidade.to_a.empty?)
                 parametros = expressao[2].split(%r{\s+})
@@ -191,41 +191,21 @@ class Skeleton < SkeletonTemplate
       contract = objeto.contract()
       puts "[Sys] Contrato da funcionalidade '#{objeto.nome}' realizado."      
       
-      # Conectando com o banco
-      begin
-      
-        # Adiciona funcionalidade
-        sql = "insert into contrato values ('#{contract.comando}',
-          #{contract.parametros},#{contract.state},'#{contract.descricao}')"
-     
-        @connection.query(sql)
-        @add_functions[(contract.comando).to_sym] = objeto
-        save(@add_functions,"data_memory//module_Hash.mem") 
-        
-        puts "Funcionalidade '#{objeto.nome}' acoplada."
-        
-      rescue
-        puts "Esta funcionalidade já está acoplada."
-        @add_functions[(contract.comando).to_sym] = objeto
-        save(@add_functions,"data_memory//module_Hash.mem") 
-      end
+      # Adiciona funcionalidade
+      @connection.save(contract)
+      nome = "./src/CPU/data/serialization/#{contract.comando}.mem"
+      save(objeto,nome)
       
     elsif(objeto.is_a? BrainTemplate) # Objeto do tipo "TemplateBrain"
             
       # Verificando se já existe um "Brain" acoplado
-      if(@brain.nil?)
-          
-        # Inserindo novo Brain
-        @brain = objeto
-        puts "[Sys] Novo cerebro '#{objeto.nome}' acoplado."
-      else
-          
-        # Inserindo novo Brain
-        @brain = objeto
-        puts "[Sys] Cerebro '#{objeto.nome}' substituiu o cerebro antigo."
-        
-      end
-        
+      puts @brain.nil? "[Sys] Novo cerebro '#{objeto.nome}' acoplado.":"[Sys] Cerebro '#{objeto.nome}' substituiu o cerebro antigo."
+      @brain = objeto
+      
+      nome = "./src/CPU/data/serialization/Brain.mem"
+      save(objeto,nome)
+
+  
     else
       
       # Caso o objeto de entrada não seja dos tipos. 
@@ -244,30 +224,24 @@ class Skeleton < SkeletonTemplate
       contract = objeto.contract()
       puts "[Sys] Contrato cancelado."      
       
-      # Conectando com o banco
-      begin
-        
-        sql = "select * from contrato where comando = '#{contract.comando}'"
-        
-        unless(@connection.query(sql).to_a.empty?)
-        
-          # Remove funcionalidade      
-          sql = "delete from contrato where comando= '#{contract.comando}'"
-          @connection.query(sql) 
-          @add_functions.delete((contract.comando).to_sym)
-          save(@add_functions,"data_memory//module_Hash.mem") 
-            
-          puts "[Sys] Funcionalidade '#{objeto.nome}' removida."  
-        
-        else
-          puts "[Sys] A funcionalidade '#{objeto.nome}' não foi encontrada." 
-        end
-        
-      rescue
-        puts "[Sys] A funcionalidade '#{objeto.nome}' não foi encontrada." 
-      end
+      # Remove funcionalidade      
+      @connection.delete(contract)
+      nome = "./src/CPU/data/serialization/#{contract.comando}.mem"
+      File.delete(nome)
       
+    elsif(objeto.is_a? BrainTemplate) # Objeto do tipo "TemplateBrain"
+            
+      # Verificando se já existe um "Brain" acoplado
+      puts @brain.nil? "[Sys] Não há um cerebro acoplado.":"[Sys] Removendo cerebro '#{objeto.nome}'."
+      @brain = objeto
+      
+      nome = "./src/CPU/data/serialization/Brain.mem"
+      File.delete(nome)
+
+  
     else
+      
+      # Caso o objeto de entrada não seja dos tipos esperados. 
       puts "[Sys] Objeto do tipo incorreto."
     end
   end
@@ -276,22 +250,8 @@ class Skeleton < SkeletonTemplate
   #======================================================================#
   def detach_all()
     # Limpando tabela de contrato
-    puts "[Sys] Removendo todas as funcionalidades acopladas."
+    @connection.delete_all
     
-    begin
-        
-      # Pesquisa funcionalidade      
-      sql = "delete from contrato"
-      
-      @connection.query(sql)
-      @add_functions = Hash.new
-      save(@add_functions,"data_memory//module_Hash.mem") 
-      
-      puts "[Sys] Remoção concluída."
-      
-    rescue
-      puts "[Sys] Não foi possivel excluir as funcionalidades." 
-    end
   end
   #======================================================================#
 
