@@ -1,7 +1,7 @@
 Projeto-CPU
 =======================
 
-# Descrição:
+Descrição:
 ----------------
 O "Projeto-CPU" é um sistema amador que visa simular uma linguagem com suporte a aprendizado, sua estrutura é dividida em 3 componentes essenciais.
 
@@ -9,12 +9,12 @@ O "Projeto-CPU" é um sistema amador que visa simular uma linguagem com suporte 
 * Skeleton (esqueleto): Responsável pela interação entre o usuário e o "cérebro", e entre o usuário e os "módulos".
 * Molule (módulos): São as funções-base do sistema, são configuradas externamente e cadastradas em um banco de dados.
 
-# Estrutura:
+Estrutura:
 ----------------
 A estrutura do projeto é feita ná linguagem Ruby e com base em uma arquitetura de camadas aonde o esqueleto se comunica com os "módulos" e com o "cérebro".
 Além disso o "esqueleto" é responsável por cadastrar, manipular acesso e remover quaisquér componentes do sistema por meio de um banco de dados Sqlite.
 
-# Detalhamento:
+Detalhamento:
 ----------------
 As camadas possuem características própria de forma a garantir a modularidade do sistema, são elas:
 
@@ -68,7 +68,7 @@ Os "módulos" são objetos-padrões do sistema e devem possuir as seguintes cara
 
 * Independência (MOD_5): Todo "módulo" é independente e portanto deverá possuir suas próprias regras de segurança e tratamento de erros. 
 
-# Banco de dados:
+Banco de dados:
 ----------------
 Todos os contratos são inseridos em um banco de dados Sqlite cuja tabela deverá ter o seguinte formato:
 
@@ -76,11 +76,39 @@ Todos os contratos são inseridos em um banco de dados Sqlite cuja tabela dever�
 --------------|--------------------------|---------------------|----------------------
  [_Soma_] | [_0_] | [_1_] | [_Isto soma números_]
 
-# Detalhes especiais:
+Detalhes especiais:
 ----------------
+O sistema deve receber, tratar e ativar a entrada do usuário. Todo esse processo é realizado pelo "esqueleto" cuja saída é uma ação direcionada para as camadas "módulo" ou "cérebro"...
 
 ### Manipulação de linguagem:
+A entrada do usuário possui a seguinte sintaxe:
+
+* Linha de comando simples `[ palavra-chave ] [ parametros referentes ao método referente a palavra-chave ]`
+   * Exemplo: `soma 2 3 4 5`
+
+* Linha de comando composta `[ Linha de comando simples 1 ] | [ Linha de comando simples 2 ]`
+   * Exemplo: `soma 2 3 4 5 | quadrado 2`
+
+* Export de resultados simples `[ Linha de comando simples ] -export`
+   * Exemplo: `soma 2 3 4 5 -export`.O resultado é um objeto JSON no seguinte formato:
+
+```
+{"export_output":[
+  {"id":[posição da linha de comando simples], "comando":[palavra-chave da função], "output":[output da função]}
+]}
+```
+
+* Parametros de recursividade `[ Linha de comando simples ] | [ palavra-chave ] [ parametro 1 ] [ parametro 2 ] [ $n ]`
+   * Exemplo: `soma 2 3 4 5 | quadrado $1` , o caractere especial `$1` faz referência ao resultado da primeira linha.
+
+* Comandos base de sistema `system [ man / list ]`, aonde:
+   * `system man`: Lista de forma interativa todos os "módulos" acoplado no sistema. Ao selecionar uma delas deverá ser mostrado todas as informações do "módulo". 
+   * `system list`: Exibe uma simples lista de todos os "módulos" acoplado no sistema.
+
+* Comando "aprender", aonde o sistema por meio da interação com o "cérebro" deve aprender novas funcionalidades. Mais detalhes no próximo tópico.
 
 ### Conexão entre camadas:
+O sistema possui uma arquitetura em camadas, aonde a camada "esqueleto" 
 
 
+ 
