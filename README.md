@@ -60,13 +60,13 @@ Os "módulos" são objetos-padrões do sistema e devem possuir as seguintes cara
 
    * Descrição geral do funcionamento do "módulo".
 
-   * Método de ativação "trigger" (MOD_2): Todo "módulo" deverá possuir um método de nome "trigger" que poderá receber uma quantidade infinita de parametros.
+* Método de ativação "trigger" (MOD_2): Todo "módulo" deverá possuir um método de nome "trigger" que poderá receber uma quantidade infinita de parametros.
 
-   * Variável de resultado (MOD_3): Todo "módulo" deverá atribuir sua resposta em uma "variável especial" independente da existência ou não de resultados manipuláveis.
+* Variável de resultado (MOD_3): Todo "módulo" deverá atribuir sua resposta em uma "variável especial" independente da existência ou não de resultados manipuláveis.
 
-   * Método de resposta "get" (MOD_4): Todo "módulo" deverá possuir um método de nome "get" que deverá retorna a variável de resposta.
+* Método de resposta "get" (MOD_4): Todo "módulo" deverá possuir um método de nome "get" que deverá retorna a variável de resposta.
 
-   * Independência (MOD_5): Todo "módulo" é independente e portanto deverá possuir suas próprias regras de segurança e tratamento de erros. 
+* Independência (MOD_5): Todo "módulo" é independente e portanto deverá possuir suas próprias regras de segurança e tratamento de erros. 
 
 # Banco de dados:
 ----------------
