@@ -17,19 +17,19 @@ Além disso o "esqueleto" é responsável por cadastrar, manipular acesso e remo
 ### Diretório:
 O diretório do projeto possui uma configuração própria, feita para auxiliar a manutenção e a organização dos dados.
 
-[_diretório local_]/src : Diretório-Mãe
-[_diretório local_]/src/CPU : Diretório-base
-[_diretório local_]/src/CPU/data : Localização dos resultados exportados pelo comando `-export`
-[_diretório local_]/src/CPU/data/db : Localização do banco de dados Sqlite.
-[_diretório local_]/src/CPU/data/serialization : Funções serializadas
-[_diretório local_]/src/CPU/data/Essentials : Arquivos essenciais para a manipulação de dados.
-[_diretório local_]/src/CPU/Head : Funcionamento da camada "cérebro".
-[_diretório local_]/src/CPU/Head/Essentials : Arquivos essenciais para a camada "cérebro".
-[_diretório local_]/src/CPU/Module : Funcionamento da camada "módulo".
-[_diretório local_]/src/CPU/Module/Essentials : Arquivos essenciais para a camada "módulo".
-[_diretório local_]/src/CPU/Skeleton : Funcionamento da camada "esqueleto".
-[_diretório local_]/src/CPU/Skeleton/Essentials : Arquivos essenciais para a camada "esqueleto".
-[_diretório local_]/src/Template : Arquivos de templates
+* [_diretório local_]/src : Diretório-Mãe
+* [_diretório local_]/src/CPU : Diretório-base
+* [_diretório local_]/src/CPU/data : Localização dos resultados exportados pelo comando `-export`
+* [_diretório local_]/src/CPU/data/db : Localização do banco de dados Sqlite.
+* [_diretório local_]/src/CPU/data/serialization : Funções serializadas
+* [_diretório local_]/src/CPU/data/Essentials : Arquivos essenciais para a manipulação de dados.
+* [_diretório local_]/src/CPU/Head : Funcionamento da camada "cérebro".
+* [_diretório local_]/src/CPU/Head/Essentials : Arquivos essenciais para a camada "cérebro".
+* [_diretório local_]/src/CPU/Module : Funcionamento da camada "módulo".
+* [_diretório local_]/src/CPU/Module/Essentials : Arquivos essenciais para a camada "módulo".
+* [_diretório local_]/src/CPU/Skeleton : Funcionamento da camada "esqueleto".
+* [_diretório local_]/src/CPU/Skeleton/Essentials : Arquivos essenciais para a camada "esqueleto".
+* [_diretório local_]/src/Template : Arquivos de templates
  
 
 Detalhamento:
