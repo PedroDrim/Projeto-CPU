@@ -14,6 +14,24 @@ Estrutura:
 A estrutura do projeto é feita ná linguagem Ruby e com base em uma arquitetura de camadas aonde o esqueleto se comunica com os "módulos" e com o "cérebro".
 Além disso o "esqueleto" é responsável por cadastrar, manipular acesso e remover quaisquér componentes do sistema por meio de um banco de dados Sqlite.
 
+### Diretório:
+O diretório do projeto possui uma configuração própria, feita para auxiliar a manutenção e a organização dos dados.
+
+[_diretório local_]/src : Diretório-Mãe
+[_diretório local_]/src/CPU : Diretório-base
+[_diretório local_]/src/CPU/data : Localização dos resultados exportados pelo comando `-export`
+[_diretório local_]/src/CPU/data/db : Localização do banco de dados Sqlite.
+[_diretório local_]/src/CPU/data/serialization : Funções serializadas
+[_diretório local_]/src/CPU/data/Essentials : Arquivos essenciais para a manipulação de dados.
+[_diretório local_]/src/CPU/Head : Funcionamento da camada "cérebro".
+[_diretório local_]/src/CPU/Head/Essentials : Arquivos essenciais para a camada "cérebro".
+[_diretório local_]/src/CPU/Module : Funcionamento da camada "módulo".
+[_diretório local_]/src/CPU/Module/Essentials : Arquivos essenciais para a camada "módulo".
+[_diretório local_]/src/CPU/Skeleton : Funcionamento da camada "esqueleto".
+[_diretório local_]/src/CPU/Skeleton/Essentials : Arquivos essenciais para a camada "esqueleto".
+[_diretório local_]/src/Template : Arquivos de templates
+ 
+
 Detalhamento:
 ----------------
 As camadas possuem características própria de forma a garantir a modularidade do sistema, são elas:
@@ -108,7 +126,33 @@ A entrada do usuário possui a seguinte sintaxe:
 * Comando "aprender", aonde o sistema por meio da interação com o "cérebro" deve aprender novas funcionalidades. Mais detalhes no próximo tópico.
 
 ### Conexão entre camadas:
-O sistema possui uma arquitetura em camadas, aonde a camada "esqueleto" 
+O sistema possui uma arquitetura em camadas, aonde a camada "esqueleto" se comunica com as camadas "cérebro" e "módulo".
+A comunicação entre as camadas "esqueleto" e "módulo" ocorrem da seguinte maneira:
 
+1. O usuário digita um comando para o sistema, por exemplo: `soma 2 3 | quadrado 3 -export`.
 
+2. O __"cérebro"__ deve receber essa entrada e realizar o seguinte tratamento:
+   * Identificar o parametro de sistema, `-export`.
+   * Separar multiplos comandos, por meio do identificador `|`.
+   * Identificar para cada comando existente "Qual é a sua palavra-chave e quais são seus parâmetros"
+   * Retornar um objeto referente ao comando anterior devidamente tratado.
+
+3. O __"cérebro"__ deve, para cada palavra-chave (função) encontrada, resgatar o objeto serializado referente a função e executar método `trigger` existente no __"módulo"__ ,passando como parametros os parametros referentes a função. 
+
+4. O __"módulo"__ irá executar o método `trigger` e seu resultado será armazenado em uma variável de resposta interna.
+
+5. O __"cérebro"__ executa o método `get` do __"módulo"__ e recebe o resultado do método.
+
+6. O __"cérebro"__ deverá então armazenar todos os resultados em um "buffer" de forma que seja possível o mapeamento.
+
+7. O __"cérebro"__ Verifica se existe o parametro de sistema `-export` e em caso afirmativo salva a resposta no formato "JSON". Em caso negativo a resposta é exibida no terminal.
  
+Refatoração:
+----------------
+
+A refatoração do código possui as seguintes regras:
+
+* Toda função deverá possuir no máximo 20 linhas codificadas.
+* Funções do tipo `private` deverão ficar no final da classe.
+* Deverá existir no máximo 2 estruturas de repetição por método.
+* Toda classe / método deverão ser comentadas e documentadas.
