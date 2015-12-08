@@ -17,24 +17,24 @@ Além disso o "esqueleto" é responsável por cadastrar, manipular acesso e remo
 ### Diretório:
 O diretório do projeto possui uma configuração própria, feita para auxiliar a manutenção e a organização dos dados.
 
-* [diretório local]/src : Diretório-Mãe
+* ./src : Diretório-Mãe
 
-  * [diretório local]/src/CPU : Diretório-base
-    * [diretório local]/src/CPU/data : Localização dos resultados exportados pelo comando `-export`
-      * [diretório local]/src/CPU/data/db : Localização do banco de dados Sqlite.
-      * [diretório local]/src/CPU/data/serialization : Funções serializadas
-      * [diretório local]/src/CPU/data/Essentials : Arquivos essenciais para a manipulação de dados.
+  * ./src/CPU : Diretório-base
+    * ./src/CPU/data : Localização dos resultados exportados pelo comando `-export`
+      * ./src/CPU/data/db : Localização do banco de dados Sqlite.
+      * ./src/CPU/data/serialization : Funções serializadas
+      * ./src/CPU/data/Essentials : Arquivos essenciais para a manipulação de dados.
     
-  * [diretório local]/src/CPU/Head : Funcionamento da camada "cérebro".
-    * [diretório local]/src/CPU/Head/Essentials : Arquivos essenciais para a camada "cérebro".
+  * ./src/CPU/Head : Funcionamento da camada "cérebro".
+    * ./src/CPU/Head/Essentials : Arquivos essenciais para a camada "cérebro".
     
-  * [diretório local]/src/CPU/Module : Funcionamento da camada "módulo".
-    * [diretório local]/src/CPU/Module/Essentials : Arquivos essenciais para a camada "módulo".
+  * ./src/CPU/Module : Funcionamento da camada "módulo".
+    * ./src/CPU/Module/Essentials : Arquivos essenciais para a camada "módulo".
     
-  * [diretório local]/src/CPU/Skeleton : Funcionamento da camada "esqueleto".
-    * [diretório local]/src/CPU/Skeleton/Essentials : Arquivos essenciais para a camada "esqueleto".
+  * ./src/CPU/Skeleton : Funcionamento da camada "esqueleto".
+    * ./src/CPU/Skeleton/Essentials : Arquivos essenciais para a camada "esqueleto".
     
-  * [diretório local]/src/Template : Arquivos de templates
+  * ./src/Template : Arquivos de templates
  
 
 Detalhamento:
@@ -159,5 +159,5 @@ A refatoração do código possui as seguintes regras:
 
 * Toda função deverá possuir no máximo 20 linhas codificadas.
 * Funções do tipo `private` deverão ficar no final da classe.
-* Deverá existir no máximo 2 estruturas de repetição por método.
+* Deverá existir no máximo 2 estruturas de repetição por método, com no máximo 3 métodos de profundidade.
 * Toda classe / método deverão ser comentadas e documentadas.
