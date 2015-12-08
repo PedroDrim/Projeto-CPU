@@ -17,19 +17,31 @@ Além disso o "esqueleto" é responsável por cadastrar, manipular acesso e remo
 ### Diretório:
 O diretório do projeto possui uma configuração própria, feita para auxiliar a manutenção e a organização dos dados.
 
-* ./src : Diretório-Mãe
-  1. ./src/CPU : Diretório-base
-    * ./src/CPU/data : Localização dos resultados exportados pelo comando `-export`
-      * ./src/CPU/data/db : Localização do banco de dados Sqlite.
-      * ./src/CPU/data/serialization : Funções serializadas
-      * ./src/CPU/data/Essentials : Arquivos essenciais para a manipulação de dados.
-  2. ./src/CPU/Head : Funcionamento da camada "cérebro".
-    * ./src/CPU/Head/Essentials : Arquivos essenciais para a camada "cérebro".
-  3. ./src/CPU/Module : Funcionamento da camada "módulo".
-    * ./src/CPU/Module/Essentials : Arquivos essenciais para a camada "módulo".
-  4. ./src/CPU/Skeleton : Funcionamento da camada "esqueleto".
-    * ./src/CPU/Skeleton/Essentials : Arquivos essenciais para a camada "esqueleto".
-  5. ./src/Template : Arquivos de templates
+o-> ./src : Diretório-Mãe.
+
+|---> ./src/CPU : Diretório-base.
+
+|------> ./src/CPU/data : Localização dos resultados exportados pelo comando `-export` .
+
+|--------->  ./src/CPU/data/db : Localização do banco de dados Sqlite.
+
+|---------> ./src/CPU/data/serialization : Funções serializadas.
+
+|------> ./src/CPU/data/Essentials : Arquivos essenciais para a manipulação de dados.
+
+|---> ./src/CPU/Head : Funcionamento da camada "cérebro".
+
+|------> ./src/CPU/Head/Essentials : Arquivos essenciais para a camada "cérebro".
+
+|---> ./src/CPU/Module : Funcionamento da camada "módulo".
+
+|------> ./src/CPU/Module/Essentials : Arquivos essenciais para a camada "módulo".
+
+|---> ./src/CPU/Skeleton : Funcionamento da camada "esqueleto".
+
+|------> ./src/CPU/Skeleton/Essentials : Arquivos essenciais para a camada "esqueleto".
+
+o---> ./src/Template : Arquivos de templates.
  
 
 Detalhamento:
@@ -158,4 +170,3 @@ A refatoração do código possui as seguintes regras:
 * Funções do tipo `private` deverão ficar no final da classe.
 * Deverá existir no máximo 2 estruturas de repetição por método, com no máximo 3 métodos de profundidade.
 * Toda classe / método deverão ser comentadas e documentadas.
-v
