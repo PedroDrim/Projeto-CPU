@@ -18,18 +18,18 @@ Além disso o "esqueleto" é responsável por cadastrar, manipular acesso e remo
 O diretório do projeto possui uma configuração própria, feita para auxiliar a manutenção e a organização dos dados.
 
 * ./src : Diretório-Mãe
-  * ./src/CPU : Diretório-base
+  1. ./src/CPU : Diretório-base
     * ./src/CPU/data : Localização dos resultados exportados pelo comando `-export`
       * ./src/CPU/data/db : Localização do banco de dados Sqlite.
       * ./src/CPU/data/serialization : Funções serializadas
       * ./src/CPU/data/Essentials : Arquivos essenciais para a manipulação de dados.
-  * ./src/CPU/Head : Funcionamento da camada "cérebro".
+  2. ./src/CPU/Head : Funcionamento da camada "cérebro".
     * ./src/CPU/Head/Essentials : Arquivos essenciais para a camada "cérebro".
-  * ./src/CPU/Module : Funcionamento da camada "módulo".
+  3. ./src/CPU/Module : Funcionamento da camada "módulo".
     * ./src/CPU/Module/Essentials : Arquivos essenciais para a camada "módulo".
-  * ./src/CPU/Skeleton : Funcionamento da camada "esqueleto".
+  4. ./src/CPU/Skeleton : Funcionamento da camada "esqueleto".
     * ./src/CPU/Skeleton/Essentials : Arquivos essenciais para a camada "esqueleto".
-  * ./src/Template : Arquivos de templates
+  5. ./src/Template : Arquivos de templates
  
 
 Detalhamento:
@@ -39,8 +39,10 @@ As camadas possuem características própria de forma a garantir a modularidade 
 ### Brain:
 O "cérebro" é responsável por realizar as seguintes rotinas:
 
-* Item 1 Deve Possuir uma palavra-chave (BRA_1): Para identificação, todo "cérebro" deverá possuir uma palavra-chave, entretando essa palavra não é cadastrada no banco de dados.
-* [_Á implementar_]
+* Deve Possuir uma palavra-chave (BRA_1): Para identificação, todo "cérebro" deverá possuir uma palavra-chave, entretando essa palavra não é cadastrada no banco de dados.
+* Deve Funcionar como uma Rede Neural (BRA_2): O "cérebro" deve possuir uma estrutura base para "inteligência artificial".
+* Deve Gerar Novas Funções (BRA_3): O "cérebro" deve ser capaz de aprender novas funcionalidades por meio da inteligência artificial.
+* Gerenciamento Contratual (BRA_4): As novas funcionalidades geradas pelo "cérebro" devem possuir um "contrato" para interação com o "esqueleto" como se fosse uma função-base.
 
 ### Skeleton:
 O "esqueleto" é responsável por realiazar as seguintes rotinas:
@@ -156,3 +158,4 @@ A refatoração do código possui as seguintes regras:
 * Funções do tipo `private` deverão ficar no final da classe.
 * Deverá existir no máximo 2 estruturas de repetição por método, com no máximo 3 métodos de profundidade.
 * Toda classe / método deverão ser comentadas e documentadas.
+v
