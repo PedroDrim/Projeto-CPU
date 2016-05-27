@@ -1,3 +1,4 @@
+ 
 Projeto-CPU
 =======================
 
@@ -17,36 +18,27 @@ Além disso o "esqueleto" é responsável por cadastrar, manipular acesso e remo
 ### Diretório:
 O diretório do projeto possui uma configuração própria, feita para auxiliar a manutenção e a organização dos dados.
 
-o-> ./src : Diretório-Mãe.
-
-|---> ./src/CPU : Diretório-base.
-
-|------> ./src/CPU/data : Localização dos resultados exportados pelo comando `-export` .
-
-|--------->  ./src/CPU/data/db : Localização do banco de dados Sqlite.
-
-|---------> ./src/CPU/data/serialization : Funções serializadas.
-
-|------> ./src/CPU/data/Essentials : Arquivos essenciais para a manipulação de dados.
-
-|---> ./src/CPU/Head : Funcionamento da camada "cérebro".
-
-|------> ./src/CPU/Head/Essentials : Arquivos essenciais para a camada "cérebro".
-
-|---> ./src/CPU/Module : Funcionamento da camada "módulo".
-
-|------> ./src/CPU/Module/Essentials : Arquivos essenciais para a camada "módulo".
-
-|---> ./src/CPU/Skeleton : Funcionamento da camada "esqueleto".
-
-|------> ./src/CPU/Skeleton/Essentials : Arquivos essenciais para a camada "esqueleto".
-
-o---> ./src/Template : Arquivos de templates.
+Diretório  | Descrição
+-----------|----------
+./src | Diretório-Mãe.
+./src/CPU | Diretório-base.
+./src/CPU/data | Localização dos dados utilizados pelo Sistema.
+./src/CPU/data/db | Localização do banco de dados Sqlite.
+./src/CPU/data/serialization | Funções serializadas.
+./src/CPU/data/output | Resultados exportados pelo comando `-export`.
+./src/CPU/data/Essentials | Arquivos essenciais para a manipulação de dados.
+./src/CPU/Head | Funcionamento da camada "cérebro".
+./src/CPU/Head/Essentials | Arquivos essenciais para a camada "cérebro".
+./src/CPU/Module | Funcionamento da camada "módulo".
+./src/CPU/Module/Essentials | Arquivos essenciais para a camada "módulo".
+./src/CPU/Skeleton | Funcionamento da camada "esqueleto".
+./src/CPU/Skeleton/Essentials | Arquivos essenciais para a camada "esqueleto".
+./src/Template | Arquivos de templates.
  
 
 Detalhamento:
 ----------------
-As camadas possuem características própria de forma a garantir a modularidade do sistema, são elas:
+As camadas possuem características próprias de forma a garantir a modularidade do sistema, são elas:
 
 ### Brain:
 O "cérebro" é responsável por realizar as seguintes rotinas:
@@ -125,7 +117,7 @@ A entrada do usuário possui a seguinte sintaxe:
    * Exemplo: `soma 2 3 4 5 -export`.O resultado é um objeto JSON no seguinte formato:
 
 ```
-{"export_output":[
+{"projetoCPU":[
   {"id":[posição da linha de comando simples], "comando":[palavra-chave da função], "output":[output da função]}
 ]}
 ```
