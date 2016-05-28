@@ -54,6 +54,16 @@ else
 	echo "Directory created."
 fi
 
+# Existe pasta src/CPU/data/output?
+if [ -d ./src/CPU/data/output ]
+then
+	echo "Directory ./src/CPU/data/output : OK!"
+else
+	echo "Directory ./src/CPU/data/output : FAIL!"
+	mkdir ./src/CPU/data/output
+	echo "Directory created."
+fi
+
 # Existe pasta src/CPU/data/Essentials?
 if [ -d ./src/CPU/data/Essentials ]
 then

@@ -30,22 +30,36 @@ brain = Brain.new("TecnoBrain","TCB")
 soma = ArmSoma.new("Somatório de inteiros")
 quadrado = ArmQuadrado.new("Quadrado de inteiros")
 
-skeleton_teste = Skeleton.new(brain)
-skeleton_teste.attach(soma)
-skeleton_teste.attach(quadrado)
+arguments = [brain,soma,quadrado]
+
+skeleton_teste = Skeleton.new(arguments) # use "attach" e "detach" para acoes independente
+
 #=======================================================#
 
 #=======================================================#
 # Iniciando interacao de teste
-
-$ciclo = true
-while($ciclo)
 			
-	print "\n[*] Digite o comando: "
-	comando = gets.chop!
-	skeleton_teste.command(comando)
+comando = %x{zenity --forms --add-entry=Comando --add-list=Parametro --list-values="None|Export" \
+	     --separator="$" --title="Projeto CPU" --width=500 --height=240}.chop
+comando = comando.split("$")
+comando = "#{comando[0]} --#{comando[1]}"
 
+resposta = skeleton_teste.process(comando)
+resposta = resposta[:projetoCPU]
+
+output = ""
+resposta.each do |iD,r| 
+
+	unless( r[:resposta].is_a?(Integer) || r[:resposta].is_a?(String) )
+		r[:resposta] = "*ImpossivelMostrar*"
+	end
+
+	output << "#{iD} #{r[:comando]} #{r[:resposta]} "
 end
+
+comando = %x{zenity --list --title="Projeto CPU" \
+ 		  --column="ID" --column="Comando" --column="Resultado" \
+ 		  #{output}}
 
 skeleton_teste.close
 #=======================================================#
