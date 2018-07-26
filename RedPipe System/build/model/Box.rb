@@ -1,30 +1,32 @@
 #=======================================================#
-class SkeletonTemplate
+class Box
+   
+    #=======================================================#
+    def initialize(action, *actionParameters)
+        @action = action
+        @actionParameters = actionParameters
+        @isEmpty = true     
+        @next = nil
+    end
+    #=======================================================#
 
     #=======================================================#
-    def command(action)
-       # Envia uma ação para o cerebro "brain" executar.
+    def setNext(nextBox)
+        @next = nextBox if @isEmpty
+        @isEmpty = false     
     end
     #=======================================================#
-    
+
     #=======================================================#
-    def attach(objeto)
-        # Insere uma nova funcionalidade ao "brain" OU insere um novo "brain" 
-        # conforme o desejado.
+    def getNext
+        return @next.run
     end
     #=======================================================#
-    
+
     #=======================================================#
-    def detach(objeto)
-        # Cancela o contrado de "objeto" removendo sua funcionalidade do
-        # "Brain".
-    end
-    #=======================================================#
-    
-    #=======================================================#
-    def state()
-        # Exibe o status das funcionaliadades acopladas no esqueleto
-        # (incluindo o cerebro).
+    def run
+        @action.make @actionParameters
+        $buffer.push @action.get
     end
     #=======================================================#
     

@@ -1,0 +1,3 @@
+file: ./HelloWorld.rb
+command: hello
+description: Classe para o teste de um contrato "Red Pipe"
